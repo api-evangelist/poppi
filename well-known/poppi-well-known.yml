@@ -1,0 +1,34 @@
+generated: '2026-08-26'
+method: searched
+source: https://drinkpoppi.com/.well-known/
+note: >-
+  Probed the poppi storefront host (drinkpoppi.com) on 2026-08-26. Three real documents were served and
+  saved: the Universal Commerce Protocol merchant profile, plus OIDC discovery and RFC 8414 OAuth
+  authorization-server metadata for the store's Shopify Customer Accounts tenant (issuer
+  https://shopify.com/authentication/22399731 — poppi's own tenant, confirmed by shop_id 22399731 in the
+  UCP profile). The 404s are genuine 404s, not an SPA catch-all: the host returns a real Shopify 404 page
+  for unknown /.well-known/* paths and a JSON document for the ones it serves.
+hit_count: 3
+hosts:
+- host: https://drinkpoppi.com
+  documents:
+  - path: /.well-known/ucp
+    status: 200
+    file: poppi-ucp.json
+    note: UCP merchant profile — services, capabilities, payment handlers. Not an IETF-registered path.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: poppi-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: poppi-oauth-authorization-server.json
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404

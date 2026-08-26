@@ -1,0 +1,48 @@
+generated: '2026-08-26'
+method: probed
+source: https://drinkpoppi.com/api/2026-07/graphql.json
+note: >-
+  The Shopify Storefront GraphQL API, deployed on poppi's own domain and open to anonymous introspection.
+  A full introspection query returned HTTP 200 (770,977 bytes) and a live data query returned
+  shop.name "poppi" with primaryDomain https://drinkpoppi.com — the contract identifies the merchant as
+  poppi from inside itself, which is what settles ownership here. The SCHEMA is Shopify's platform schema
+  (the same shape every Shopify store serves, the WordPress /wp-json case in the pipeline's ownership
+  rules); the INSTANCE, its catalog, prices and carts are poppi's. Recorded on that basis.
+endpoint: https://drinkpoppi.com/api/2026-07/graphql.json
+introspection: open (anonymous, no Storefront access token required)
+sdl: graphql/poppi-storefront.graphql
+schema:
+  query_type: QueryRoot
+  mutation_type: Mutation
+  subscription_type: null
+  query_fields: 34
+  mutation_fields: 41
+  types: 420
+api_versions:
+  latest_supported: '2026-07'
+  supported: ['2025-10', '2026-01', '2026-04', '2026-07']
+  unsupported: ['2026-10 (release candidate)', 'unstable']
+  discovery_field: publicApiVersions
+  path_template: https://drinkpoppi.com/api/{version}/graphql.json
+capabilities:
+  read:
+  - products, productByHandle, productRecommendations, productTags, productTypes
+  - collections, collection, collectionByHandle
+  - search, predictiveSearch, sitemap, urlRedirects
+  - blogs, blog, blogByHandle, articles, article, pages, page, pageByHandle
+  - cart, cartCompletionAttempt, customer, localization, locations, paymentSettings, shop
+  - metaobject, metaobjects, menu, node, nodes
+  write:
+  - cart mutations (cartCreate, cartLinesAdd/Update/Remove, cartDiscountCodesUpdate, cartGiftCardCodes*, cartBuyerIdentityUpdate, cartDeliveryAddresses*, cartAttributesUpdate, cartNoteUpdate, cartMetafieldsSet/Delete, cartClone, cartPaymentUpdate, cartSelectedDeliveryOptionsUpdate, cartPrepareForCompletion, cartSubmitForCompletion, cartRemovePersonalData)
+  - customer account mutations (customerCreate, customerActivate*, customerUpdate, customerRecover, customerReset*, customerAddress*, customerDefaultAddressUpdate, customerAccessToken*)
+  - shopPayPaymentRequestSessionCreate, shopPayPaymentRequestSessionSubmit
+cost_signal:
+  field: extensions.cost.requestedQueryCost
+  observed: [1, 3, 7]
+  note: Every response carries the query cost; there is no published numeric quota.
+x-evidence:
+  fetched: '2026-08-26'
+  introspection_url: https://drinkpoppi.com/api/2026-07/graphql.json
+  http_status: 200
+  content_type: application/json
+  ownership_probe: '{ shop { name primaryDomain { url } } } -> {"name":"poppi","primaryDomain":{"url":"https://drinkpoppi.com"}}'

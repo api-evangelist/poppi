@@ -1,0 +1,187 @@
+generated: '2026-08-26'
+method: probed
+source: https://drinkpoppi.com/api/ucp/mcp (JSON-RPC tools/list, HTTP 200, anonymous)
+status: published
+note: 'Live, anonymous MCP endpoint. tools/list returned HTTP 200 with 13 tools and full JSON Schema inputSchemas
+  (52,007 bytes, saved verbatim to mcp/poppi-mcp-tools.json). The server is the Shopify-native Universal
+  Commerce Protocol (UCP) shopping service, served on poppi''s own domain. Ownership confirmed from the
+  UCP profile at https://drinkpoppi.com/.well-known/ucp: merchant_name ''poppi'', merchant_origin ''drinkpoppi.com'',
+  shop_id 22399731, myshopify domain mother-beverage.myshopify.com (poppi launched as Mother Beverage).
+  Response header x-shopify-ucp-mcp-api-version: 2026-04-08.'
+deployment:
+  mode: remote
+  endpoint: https://drinkpoppi.com/api/ucp/mcp
+  auth: none
+  verified: probed
+server:
+  name: poppi UCP shopping (MCP)
+  transport: http
+  url: https://drinkpoppi.com/api/ucp/mcp
+  protocol: UCP dev.ucp.shopping 2026-04-08
+  supported_versions:
+  - '2026-04-08'
+  - '2026-01-23'
+  discovery: https://drinkpoppi.com/.well-known/ucp
+  openrpc_schema: https://ucp.dev/2026-04-08/services/shopping/mcp.openrpc.json
+  docs: https://drinkpoppi.com/agents.md
+  tools_manifest: mcp/poppi-mcp-tools.json
+tool_count: 13
+tools:
+- name: get_checkout
+  description: Returns details about the checkout, including line items, totals, and any applicable discounts
+    or taxes.
+  required:
+  - meta
+  - id
+  input_properties:
+  - id
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: create_checkout
+  description: Creates a checkout. Returns checkout details, including line items, totals, and any applicable
+    discounts or taxes.
+  required:
+  - meta
+  - checkout
+  input_properties:
+  - checkout
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: update_checkout
+  description: Updates a checkout. Returns checkout details, including line items, totals, and any applicable
+    discounts or taxes.
+  required:
+  - meta
+  - checkout
+  - id
+  input_properties:
+  - checkout
+  - id
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: complete_checkout
+  description: Completes a checkout and returns the checkout result. Returns details about the completed
+    checkout, including order ID, Thank You Page URL, or any errors encountered.
+  required:
+  - meta
+  - id
+  - checkout
+  input_properties:
+  - checkout
+  - id
+  - meta
+  meta_fields:
+  - idempotency-key
+  - ucp-agent
+- name: cancel_checkout
+  description: Cancels a checkout.
+  required:
+  - meta
+  - id
+  input_properties:
+  - id
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: get_cart
+  description: Get the cart contents
+  required:
+  - meta
+  - id
+  input_properties:
+  - id
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: create_cart
+  description: Creates a new cart
+  required:
+  - meta
+  - cart
+  input_properties:
+  - cart
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: update_cart
+  description: Perform updates to a cart.
+  required:
+  - meta
+  - cart
+  - id
+  input_properties:
+  - cart
+  - id
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: cancel_cart
+  description: Cancels a cart.
+  required:
+  - meta
+  - id
+  input_properties:
+  - id
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: get_order
+  description: Get the details of an order
+  required:
+  - meta
+  - id
+  input_properties:
+  - id
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: search_catalog
+  description: Search for products from the online store, hosted on Shopify.
+  required:
+  - meta
+  - catalog
+  input_properties:
+  - catalog
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: lookup_catalog
+  description: 'Look up multiple products or variants by identifier.
+
+    Use this tool to resolve multiple product/variant IDs in a single request.'
+  required:
+  - meta
+  - catalog
+  input_properties:
+  - catalog
+  - meta
+  meta_fields:
+  - ucp-agent
+- name: get_product
+  description: 'Retrieve complete product detail by identifier. Returns a singular product
+
+    with a relevant set of variants, exact pricing, and real-time availability.
+
+    Supports interactive option selection via selected and preferences parameters
+
+    for variant narrowing and availability signals. Use for product detail page
+
+    rendering and purchase decisions.'
+  required:
+  - meta
+  - catalog
+  input_properties:
+  - catalog
+  - meta
+  meta_fields:
+  - ucp-agent
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://drinkpoppi.com/api/ucp/mcp
+  method: POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  bytes: 52007

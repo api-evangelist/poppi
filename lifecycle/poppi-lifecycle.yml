@@ -1,0 +1,50 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://drinkpoppi.com/.well-known/ucp,
+  observed response header x-shopify-ucp-mcp-api-version on POST https://drinkpoppi.com/api/ucp/mcp,
+  https://drinkpoppi.com/agents.md
+note: >-
+  poppi publishes no versioning policy, no deprecation policy, no SLA and no status page of its own. What
+  it does expose — because the UCP stack carries it — is a dated protocol version, a documented set of
+  supported versions, and a runtime version header. Recorded as observed; nothing inferred.
+versioning:
+  scheme: date-based protocol version
+  current: '2026-04-08'
+  supported: ['2026-04-08', '2026-01-23']
+  runtime_header: x-shopify-ucp-mcp-api-version
+  discovery: https://drinkpoppi.com/.well-known/ucp
+  per_version_profiles:
+    '2026-04-08': https://mother-beverage.myshopify.com/.well-known/ucp/2026-04-08
+    '2026-01-23': https://mother-beverage.myshopify.com/.well-known/ucp/2026-01-23
+  policy_published: false
+graphql_versioning:
+  scheme: quarterly dated versions in the URL path (Shopify Storefront API)
+  path_template: https://drinkpoppi.com/api/{version}/graphql.json
+  latest_supported: '2026-07'
+  supported: ['2025-10', '2026-01', '2026-04', '2026-07']
+  unsupported: ['2026-10 (release candidate)', 'unstable']
+  discovery: 'query { publicApiVersions { handle supported displayName } } — probed 2026-08-26, HTTP 200'
+  note: >-
+    Four supported versions run concurrently and the list is machine-readable at runtime, which is a real
+    (platform-provided) deprecation signal. The policy behind it is Shopify's, not poppi's, so no
+    Deprecation pointer is emitted for poppi.
+deprecation:
+  policy_published: false
+  sunset_header: not observed
+  deprecation_header: not observed
+  note: >-
+    An older UCP version (2026-01-23) is still advertised alongside the current one, which is evidence of
+    an overlap window in practice, but poppi publishes no deprecation policy stating how long that lasts.
+  rfc8594: false
+sla:
+  published: false
+status_page:
+  published: false
+  note: >-
+    No status.drinkpoppi.com and no status link on the storefront. The underlying platform status page
+    (status.shopify.com) belongs to Shopify, not to poppi, so no StatusPage pointer is emitted.
+changelog:
+  published: false
+  note: No dated changelog for the agent surface. The only version history exposed is the UCP version list.
+deprecated_operations: []

@@ -1,0 +1,19 @@
+generated: '2026-08-26'
+method: probed
+source: https://drinkpoppi.com/.well-known/openid-configuration
+note: >-
+  Scopes are read verbatim from scopes_supported in the store's OIDC discovery document. This is the
+  Shopify Customer Accounts scope set for poppi's own authentication tenant (issuer
+  https://shopify.com/authentication/22399731). poppi publishes no scope reference page of its own and the
+  UCP MCP endpoint at /api/ucp/mcp is anonymous, so no scopes apply there.
+authorization_server: https://shopify.com/authentication/22399731
+scope_count: 4
+scopes:
+- name: openid
+  description: OpenID Connect — request an ID token for the signed-in customer.
+- name: email
+  description: Release the customer's email address and email_verified claim.
+- name: customer-account-api:full
+  description: Full access to the Customer Account API on behalf of the signed-in customer.
+- name: customer-account-mcp-api:full
+  description: Full access to the Customer Account MCP API on behalf of the signed-in customer.

@@ -1,0 +1,103 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://drinkpoppi.com/.well-known/ucp,
+  https://drinkpoppi.com/.well-known/openid-configuration,
+  https://drinkpoppi.com/.well-known/oauth-authorization-server,
+  mcp/poppi-mcp-tools.json
+note: >-
+  Every assertion below is read off a document that was actually fetched from drinkpoppi.com, not from a
+  marketing claim. poppi publishes no compliance program (no SOC 2 / ISO 27001 / PCI attestation page of
+  its own), so no Compliance pointer is emitted.
+standards:
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence: >-
+    POST https://drinkpoppi.com/api/ucp/mcp with {"jsonrpc":"2.0","id":1,"method":"tools/list"} returned
+    HTTP 200 and a valid JSON-RPC 2.0 result carrying 13 tools with JSON Schema inputSchemas.
+- id: jsonrpc-2.0
+  name: JSON-RPC 2.0
+  conforms: true
+  evidence: 'response envelope {"jsonrpc":"2.0","id":1,"result":{...}}'
+- id: json-schema-2020-12
+  name: JSON Schema draft 2020-12
+  conforms: true
+  evidence: 'every tool inputSchema declares $schema = https://json-schema.org/draft/2020-12/schema'
+- id: oidc-discovery
+  name: OpenID Connect Discovery 1.0
+  conforms: true
+  evidence: '/.well-known/openid-configuration returns 200 with issuer, authorization_endpoint, token_endpoint, jwks_uri, id_token_signing_alg_values_supported'
+- id: rfc8414-oauth-authorization-server-metadata
+  name: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  evidence: '/.well-known/oauth-authorization-server returns 200 with issuer + endpoint metadata'
+- id: rfc7636-pkce
+  name: RFC 7636 PKCE
+  conforms: true
+  evidence: 'code_challenge_methods_supported [S256]'
+- id: iso4217
+  name: ISO 4217 currency codes
+  conforms: true
+  evidence: 'all monetary values are {amount (minor units), currency (ISO 4217)}'
+- id: iso3166-1
+  name: ISO 3166-1 alpha-2 country codes
+  conforms: true
+  evidence: catalog.context.address_country documented as ISO 3166-1 alpha-2
+- id: bcp47
+  name: IETF BCP 47 language tags
+  conforms: true
+  evidence: catalog.context.language documented as IETF BCP 47
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors are JSON-RPC error objects, not application/problem+json
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: 'https://drinkpoppi.com/.well-known/security.txt returned 404'
+- id: a2a
+  conforms: false
+  evidence: '/.well-known/agent-card.json and /.well-known/agent.json both returned 404'
+- id: graphql
+  name: GraphQL (June 2018 spec, introspection)
+  conforms: true
+  evidence: >-
+    POST https://drinkpoppi.com/api/2026-07/graphql.json returned HTTP 200 to a full introspection query
+    (770,977 bytes) — QueryRoot with 34 fields, Mutation with 41 fields, 420 types. SDL saved to
+    graphql/poppi-storefront.graphql.
+- id: openapi
+  conforms: false
+  evidence: 'no OpenAPI/Swagger document found on any probed path (/openapi.json, /openapi.yaml, /swagger.json, /api-docs, /v1/openapi.json, /api/openapi.json, /api/ucp/openapi.json)'
+- id: wsdl-soap
+  conforms: false
+  evidence: 'https://drinkpoppi.com/?wsdl returned 200 but the body is the storefront HTML page, not a WSDL — Shopify ignores the query string. Recorded as a false positive, nothing saved.'
+domain_standard:
+  id: ucp
+  name: Universal Commerce Protocol (UCP)
+  conforms: true
+  version: '2026-04-08'
+  also_supported: ['2026-01-23']
+  spec: https://ucp.dev/2026-04-08/specification/overview/
+  declaration: https://drinkpoppi.com/.well-known/ucp
+  signature: >-
+    The merchant profile declares the UCP service namespace dev.ucp.shopping with transport "mcp" and the
+    capability set dev.ucp.shopping.checkout, .fulfillment, .discount, .cart, .order, .catalog.search and
+    .catalog.lookup, each bound to a published ucp.dev JSON Schema. The response header
+    x-shopify-ucp-mcp-api-version: 2026-04-08 confirms the deployed version at runtime.
+  extensions:
+  - id: dev.shopify.catalog
+    spec: https://shopify.dev/docs/agents/catalog/storefront-catalog
+    extends: [dev.ucp.shopping.catalog.search, dev.ucp.shopping.catalog.lookup]
+  payment_handlers:
+  - com.google.pay (gpay, 2026-01-11)
+  - dev.shopify.card (2026-01-15)
+  - dev.shopify.shop_pay (2026-04-08)
+  buyer_reality: >-
+    An agent that already speaks UCP can transact with poppi with no bespoke connector — discover at
+    /.well-known/ucp, search, cart, check out and complete with buyer approval. This is the difference the
+    domain_standard_conformance dimension exists to draw, and poppi is on the conformant side of it by
+    virtue of running on Shopify's UCP-native commerce stack.
+compliance_program:
+  published: false
+  note: >-
+    No trust center, no named certifications, no security.txt. poppi's privacy policy and terms of service
+    are the only published legal surface. No Compliance pointer emitted.

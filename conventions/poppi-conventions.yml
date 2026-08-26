@@ -1,0 +1,126 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  mcp/poppi-mcp-tools.json (probed tools/list inputSchemas),
+  observed response headers on POST https://drinkpoppi.com/api/ucp/mcp,
+  https://drinkpoppi.com/agents.md
+note: >-
+  Derived from the live MCP tool schemas and the observed response headers of an anonymous tools/list call,
+  cross-checked against poppi's published agent instructions at /agents.md. There is no OpenAPI to derive
+  from; every convention below was read off the real JSON Schema or a real response header.
+auth_style: >-
+  Anonymous for the UCP MCP commerce endpoint; OAuth 2.0 / OIDC for storefront customer accounts. See
+  authentication/poppi-authentication.yml.
+transport:
+  protocol: JSON-RPC 2.0 over HTTP POST (Model Context Protocol)
+  endpoint: https://drinkpoppi.com/api/ucp/mcp
+  content_type: application/json
+  accept: application/json, text/event-stream
+idempotency:
+  supported: true
+  mechanism: request field
+  field: meta.idempotency-key
+  scope: complete_checkout
+  required: true
+  evidence: >-
+    complete_checkout inputSchema requires meta.idempotency-key ("An idempotency key for completing the
+    checkout") — mcp/poppi-mcp-tools.json, tools[3].inputSchema.properties.meta.required.
+  retention: not stated
+  note: >-
+    Idempotency is scoped to the single money-moving tool. The other twelve tools (catalog, cart, checkout
+    create/update/cancel, order read) take no idempotency key.
+pagination:
+  style: cursor
+  request_field: catalog.pagination.cursor (search_catalog)
+  response_field: pagination.cursor
+  evidence: >-
+    search_catalog description — "Results are paginated, with initial results limited to improve
+    experience. Use the pagination.cursor from the response to fetch additional pages."
+money_representation:
+  format: integer minor units paired with an ISO 4217 currency code
+  example: '{"amount": 600, "currency": "USD"} is $6.00'
+  evidence: repeated verbatim in every one of the 13 tool descriptions
+  note: >-
+    Documented in-band on every tool. Agents must divide by 100 for two-decimal currencies before quoting a
+    price; zero-decimal currencies such as JPY are already whole units.
+buyer_context:
+  fields:
+  - context.address_country (ISO 3166-1 alpha-2)
+  - context.address_region
+  - context.postal_code
+  - context.language (IETF BCP 47)
+  - context.currency (ISO 4217)
+  - context.intent
+  signals:
+  - dev.ucp.buyer_ip
+  - dev.ucp.user_agent
+  note: >-
+    agents.md instructs agents to pass context.address_country and context.currency for accurate pricing
+    and availability.
+agent_identity:
+  field: meta.ucp-agent.profile
+  required: true
+  description: Agent profile URI for UCP discovery — required on EVERY tool call, all 13 tools.
+request_tracing:
+  header: x-request-id
+  observed: 5a19593a-8d92-452c-8ab6-6fb144390e19-1787768347
+  additional:
+  - server-timing (processing/db/fetch durations, edge POP, request ID)
+versioning:
+  scheme: date-based protocol version
+  current: '2026-04-08'
+  response_header: x-shopify-ucp-mcp-api-version
+  supported: ['2026-04-08', '2026-01-23']
+  discovery: https://drinkpoppi.com/.well-known/ucp
+error_envelope:
+  shape: JSON-RPC 2.0 error object
+  note: >-
+    poppi publishes no error-code reference. complete_checkout states it returns "any errors encountered"
+    in the checkout result. See errors/poppi-problem-types.yml.
+rate_limit_signaling:
+  headers:
+  - shopify-complexity-score
+  - shopify-complexity-score-v2
+  exhaustion_status: 429
+  note: >-
+    Cost-based, not a simple counter. agents.md states "The MCP endpoint is rate-limited per IP. Back off
+    on 429 responses." No numeric quota is published. See rate-limits/poppi-rate-limits.yml.
+dry_run_mode:
+  supported: false
+  note: >-
+    No dry-run/simulation flag in any of the 13 tool schemas. The nearest equivalent is the
+    create_checkout / update_checkout pair, which computes totals, taxes and discounts without charging —
+    payment only occurs at complete_checkout.
+reversibility:
+  grade: documented
+  note: >-
+    Two real reversal operations exist in the tool set and both were verified in the probed schema. No
+    stated window for either, and the post-purchase path is explicitly NOT reversible for beverages, so
+    this grades `documented` rather than `verified`. NEVER quote a refund window to a buyer here — poppi's
+    published refund policy states none.
+  surfaces:
+  - write_operation: create_cart / update_cart
+    reversal: cancel_cart
+    operation_id: cancel_cart
+    window: not stated
+    docs: https://drinkpoppi.com/agents.md
+  - write_operation: create_checkout / update_checkout
+    reversal: cancel_checkout
+    operation_id: cancel_checkout
+    window: not stated — cancellation is possible before complete_checkout; the docs do not state a time limit
+    docs: https://drinkpoppi.com/agents.md
+  - write_operation: complete_checkout
+    reversal: none exposed via API
+    window: not applicable
+    docs: https://drinkpoppi.com/policies/refund-policy
+    note: >-
+      Once complete_checkout succeeds there is no programmatic reversal. poppi's refund policy states
+      "Due to the nature of our beverage products, we not accept returns for beverage products purchased
+      from our website" — refunds or replacements are handled by human contact at Info@motherbeverage.com
+      only for damaged or broken shipments, with no time window stated.
+cross_links:
+  errors: errors/poppi-problem-types.yml
+  lifecycle: lifecycle/poppi-lifecycle.yml
+  authentication: authentication/poppi-authentication.yml
+  rate_limits: rate-limits/poppi-rate-limits.yml
+  data_model: data-model/poppi-data-model.yml

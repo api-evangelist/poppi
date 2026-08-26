@@ -1,23 +1,143 @@
 aid: poppi
 name: Poppi
-description: 'Poppi is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Poppi is an American prebiotic soda brand founded in Austin, Texas by Stephen and Allison Ellsworth,
+  originally as Mother Beverage, rebranded to poppi in 2020 after a Shark Tank investment and acquired by
+  PepsiCo in May 2025. Poppi sells direct to consumers from drinkpoppi.com, a Shopify storefront, and that
+  storefront is where its machine-readable surface lives: poppi publishes agent instructions at /agents.md
+  and /llms.txt, a Universal Commerce Protocol (UCP) merchant profile at /.well-known/ucp, and an anonymous
+  remote MCP endpoint at /api/ucp/mcp exposing 13 catalog, cart, checkout and order tools with full JSON
+  Schema input contracts. Poppi is not a software vendor and ships no developer program, SDKs or OpenAPI —
+  its API surface is the Shopify-native agentic-commerce stack served on and scoped to its own domain.
+image: https://drinkpoppi.com/cdn/shop/files/1680_x_750_FLAVOR_FEATURE.jpg
 url: https://raw.githubusercontent.com/api-evangelist/poppi/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
 - Company
-apis: []
+- Consumer Packaged Goods
+- Beverages
+- Food and Beverage
+- Ecommerce
+- Direct to Consumer
+- Retail
+- Agentic Commerce
+- Shopify
+- MCP
+apis:
+- aid: poppi-agentic-commerce
+  name: Poppi Agentic Commerce (UCP / MCP)
+  description: >-
+    The agent-facing commerce surface for the poppi online store. An anonymous Model Context Protocol
+    endpoint implementing the Universal Commerce Protocol (UCP) shopping service, exposing catalog search
+    and lookup, cart, checkout and order tools. Buyer approval is required for payment and complete_checkout
+    requires an idempotency key. Served by Shopify on poppi's own domain; the UCP profile identifies the
+    merchant as poppi (drinkpoppi.com, shop 22399731, mother-beverage.myshopify.com).
+  humanURL: https://drinkpoppi.com/agents.md
+  baseURL: https://drinkpoppi.com/api/ucp/mcp
+  tags:
+  - Agentic Commerce
+  - MCP
+  - Ecommerce
+  - Catalog
+  - Checkout
+  properties:
+  - type: MCPServer
+    url: mcp/poppi-mcp.yml
+  - type: Documentation
+    url: https://drinkpoppi.com/agents.md
+  - type: Authentication
+    url: authentication/poppi-authentication.yml
+  - type: Conventions
+    url: conventions/poppi-conventions.yml
+  - type: Idempotency
+    url: conventions/poppi-conventions.yml
+  - type: RateLimits
+    url: rate-limits/poppi-rate-limits.yml
+  - type: DataModel
+    url: data-model/poppi-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/poppi-tool-crosswalk.yml
+- aid: poppi-storefront-graphql
+  name: Poppi Storefront GraphQL API
+  description: >-
+    The Shopify Storefront GraphQL API as deployed on poppi's own domain — 34 query fields, 41 mutations
+    and 420 types covering products, collections, search, carts, content and customer accounts.
+    Introspection is open and anonymous; a live query returns shop.name "poppi" with primaryDomain
+    https://drinkpoppi.com. The schema is Shopify's platform schema; the instance and its data are poppi's.
+  humanURL: https://shopify.dev/docs/api/storefront
+  baseURL: https://drinkpoppi.com/api/2026-07/graphql.json
+  tags:
+  - GraphQL
+  - Ecommerce
+  - Catalog
+  - Cart
+  properties:
+  - type: GraphQL
+    url: graphql/poppi-graphql.yml
+  - type: SchemaDefinition
+    url: graphql/poppi-storefront.graphql
+  - type: Documentation
+    url: https://shopify.dev/docs/api/storefront
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/poppi-domain-security.yml
 - type: Website
-  url: https://forgeglobal.com/poppi_stock/
+  url: https://drinkpoppi.com/
+- type: Documentation
+  url: https://drinkpoppi.com/agents.md
+- type: MCPServer
+  url: mcp/poppi-mcp.yml
+- type: LLMsTxt
+  url: llms/poppi-llms.txt
+- type: WellKnown
+  url: well-known/poppi-well-known.yml
+- type: Authentication
+  url: authentication/poppi-authentication.yml
+- type: OAuthScopes
+  url: scopes/poppi-scopes.yml
+- type: Conventions
+  url: conventions/poppi-conventions.yml
+- type: Idempotency
+  url: conventions/poppi-conventions.yml
+- type: Conformance
+  url: conformance/poppi-conformance.yml
+- type: ErrorCatalog
+  url: errors/poppi-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/poppi-lifecycle.yml
+- type: DataModel
+  url: data-model/poppi-data-model.yml
+- type: GraphQL
+  url: graphql/poppi-graphql.yml
+- type: ToolCrosswalk
+  url: mcp/poppi-tool-crosswalk.yml
+- type: RateLimits
+  url: rate-limits/poppi-rate-limits.yml
+- type: Plans
+  url: plans/poppi-plans-pricing.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Blog
+  url: https://drinkpoppi.com/blogs/news
+- type: Support
+  url: https://drinkpoppi.com/pages/contact-us
+- type: TermsOfService
+  url: https://drinkpoppi.com/policies/terms-of-service
+- type: PrivacyPolicy
+  url: https://drinkpoppi.com/policies/privacy-policy
+- type: Login
+  url: https://drinkpoppi.com/account/login
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 25
+  pass: local-v1

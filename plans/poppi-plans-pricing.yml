@@ -1,0 +1,23 @@
+generated: '2026-08-26'
+method: searched
+source: https://drinkpoppi.com/agents.md, https://drinkpoppi.com/collections/all
+note: >-
+  poppi is a consumer beverage brand, not an API vendor. There is no API pricing, no developer plan and no
+  paywall on the agent surface: the UCP MCP endpoint at /api/ucp/mcp answers anonymously and free. What is
+  priced is the product catalog itself — cans and cases of prebiotic soda sold through the storefront, with
+  per-variant prices returned by the search_catalog / get_product tools in ISO 4217 minor units. Recording
+  plan_count: 0 rather than omitting the file, because the absence of API plans is the finding.
+plan_count: 0
+plans: []
+api_access:
+  model: free, anonymous
+  surface: https://drinkpoppi.com/api/ucp/mcp
+  gate: buyer approval at payment, not a subscription or key
+product_pricing:
+  priced_surface: product catalog (physical goods)
+  machine_readable: true
+  endpoints:
+  - https://drinkpoppi.com/products.json
+  - https://drinkpoppi.com/collections/{handle}/products.json
+  - MCP tools search_catalog / lookup_catalog / get_product
+  currency_format: integer minor units + ISO 4217 code

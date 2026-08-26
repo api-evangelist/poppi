@@ -1,0 +1,69 @@
+generated: '2026-08-26'
+method: derived
+source: mcp/poppi-mcp-tools.json (probed tools/list inputSchemas, HTTP 200)
+note: >-
+  Derived from the JSON Schema input contracts of the 13 live MCP tools. There is no OpenAPI and no object
+  reference page, so relationships are read from the identifiers the tools actually accept and return
+  (checkout id, cart id, order id, product/variant identifiers) rather than from $ref links.
+entities:
+- name: product
+  description: A poppi product in the storefront catalog.
+  tools: [search_catalog, lookup_catalog, get_product]
+  identifiers: [product identifier, variant identifier]
+  note: >-
+    Extended by the dev.shopify.catalog UCP capability
+    (https://shopify.dev/docs/agents/catalog/storefront-catalog).
+- name: cart
+  description: A working basket of line items before checkout.
+  tools: [create_cart, get_cart, update_cart, cancel_cart]
+  identifiers: [id]
+- name: checkout
+  description: A priced, addressable purchase in progress — line items, totals, taxes, discounts, fulfillment.
+  tools: [create_checkout, get_checkout, update_checkout, complete_checkout, cancel_checkout]
+  identifiers: [id]
+- name: order
+  description: The result of a completed checkout.
+  tools: [get_order]
+  identifiers: [id]
+- name: money
+  description: Value object — integer amount in ISO 4217 minor units plus a currency code.
+  shape: '{amount: integer, currency: string}'
+- name: buyer_context
+  description: Localization and personalization hints supplied by the agent on behalf of the buyer.
+  fields: [address_country, address_region, postal_code, language, currency, intent]
+- name: agent_profile
+  description: The calling agent's UCP profile URI, required on every tool call as meta.ucp-agent.profile.
+relationships:
+- from: cart
+  to: product
+  type: has_many
+  via: line items
+- from: checkout
+  to: cart
+  type: belongs_to
+  via: cart contents promoted into the checkout
+- from: checkout
+  to: product
+  type: has_many
+  via: line items
+- from: order
+  to: checkout
+  type: belongs_to
+  via: complete_checkout returns the order ID
+- from: checkout
+  to: money
+  type: has_many
+  via: totals, taxes, discounts
+capabilities_declared:
+- dev.ucp.shopping.catalog.search
+- dev.ucp.shopping.catalog.lookup
+- dev.ucp.shopping.cart
+- dev.ucp.shopping.checkout
+- dev.ucp.shopping.fulfillment
+- dev.ucp.shopping.discount
+- dev.ucp.shopping.order
+- dev.shopify.catalog
+fulfillment_constraints:
+  allows_multi_destination_shipping: false
+  allowed_method_combinations: [[shipping]]
+  source: https://drinkpoppi.com/.well-known/ucp

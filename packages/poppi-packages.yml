@@ -1,0 +1,17 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  registry.npmjs.org search "poppi", https://drinkpoppi.com/agents.md, https://drinkpoppi.com/llms.txt
+note: >-
+  No first-party poppi client library exists on any registry. npm search returned only unrelated packages
+  (@buttercloud/upzaar-ui-native, fastify-fast-helmet); poppi publishes no SDK page, no GitHub
+  organization and no source-code link. The agent surface is called directly over JSON-RPC, and the only
+  reusable client poppi points agents at is Shopify's cross-store Shop skill at https://shop.app/SKILL.md,
+  which is Shopify's artifact and not poppi's. Recording an honest zero — checked, nothing to record.
+  No SDKs pointer emitted.
+package_count: 0
+packages: []
+registries_checked:
+- registry: npm
+  query: poppi
+  result: no first-party package

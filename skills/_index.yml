@@ -1,0 +1,26 @@
+generated: '2026-08-26'
+method: searched
+source: https://drinkpoppi.com/agents.md
+note: >-
+  poppi publishes its own agent instructions at https://drinkpoppi.com/agents.md (mirrored at /llms.txt and
+  listed in a dedicated sitemap_agentic_discovery.xml). That document is saved verbatim as
+  poppi-agents.md. The two packaged skills below are generated from it and from the probed MCP tool
+  manifest — every tool name and every field they reference exists in mcp/poppi-mcp-tools.json.
+skills:
+- file: poppi-agents.md
+  name: poppi Agent Instructions (provider-published)
+  method: searched
+  source: https://drinkpoppi.com/agents.md
+  description: >-
+    poppi's own instructions to AI agents — UCP discovery, the MCP endpoint, the typical agent flow, the
+    buyer-approval rule, rate-limit guidance, and the read-only browsing endpoints.
+- file: poppi-shop-catalog.md
+  name: Browse and search the poppi catalog
+  method: generated
+  api: poppi-agentic-commerce
+  description: Find poppi products and prices over MCP without transacting.
+- file: poppi-buy-with-approval.md
+  name: Buy poppi with buyer approval
+  method: generated
+  api: poppi-agentic-commerce
+  description: Cart to completed order over MCP, with the idempotency key and the buyer-approval invariant.

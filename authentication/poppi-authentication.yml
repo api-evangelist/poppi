@@ -1,0 +1,48 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://drinkpoppi.com/.well-known/openid-configuration,
+  https://drinkpoppi.com/.well-known/oauth-authorization-server,
+  https://drinkpoppi.com/api/ucp/mcp (anonymous tools/list, HTTP 200),
+  https://drinkpoppi.com/agents.md
+note: >-
+  poppi publishes no developer program and no API keys. There are two distinct auth surfaces, and they are
+  not the same product: the agent commerce MCP endpoint is ANONYMOUS (tools/list returned 200 with no
+  credential), while customer accounts on the storefront run OAuth 2.0 / OpenID Connect against the store's
+  own Shopify Customer Accounts tenant. Both were probed directly, not inferred from docs.
+schemes:
+- id: none
+  type: none
+  applies_to: https://drinkpoppi.com/api/ucp/mcp
+  description: >-
+    The UCP MCP endpoint accepts unauthenticated JSON-RPC. No Authorization header was sent and tools/list
+    returned HTTP 200 with the full tool manifest. Payment is gated by buyer approval at
+    complete_checkout, not by an API credential.
+  verified: probed
+- id: oidc-customer-accounts
+  type: openIdConnect
+  applies_to: https://shopify.com/authentication/22399731
+  openIdConnectUrl: https://drinkpoppi.com/.well-known/openid-configuration
+  authorization_endpoint: https://shopify.com/authentication/22399731/oauth/authorize
+  token_endpoint: https://shopify.com/authentication/22399731/oauth/token
+  jwks_uri: https://shopify.com/authentication/22399731/.well-known/jwks.json
+  end_session_endpoint: https://shopify.com/authentication/22399731/logout
+  grant_types:
+  - authorization_code
+  - refresh_token
+  - urn:ietf:params:oauth:grant-type:jwt-bearer
+  response_types: [code]
+  pkce: [S256]
+  token_endpoint_auth_methods:
+  - client_secret_basic
+  - client_secret_post
+  id_token_signing_alg: [RS256]
+  scopes:
+  - openid
+  - email
+  - customer-account-api:full
+  - customer-account-mcp-api:full
+  description: >-
+    Shopify Customer Accounts OIDC for the poppi store (issuer https://shopify.com/authentication/22399731,
+    shop 22399731). Login entry point is https://drinkpoppi.com/account/login, which 302s into this tenant.
+  verified: probed

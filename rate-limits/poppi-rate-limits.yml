@@ -1,0 +1,34 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://drinkpoppi.com/agents.md (published guidance),
+  observed response headers on POST https://drinkpoppi.com/api/ucp/mcp
+note: >-
+  poppi publishes no numeric quota. It publishes a rate-limit RULE and the endpoint returns a cost-based
+  runtime signal on every response, which is the part an agent actually needs. limit_count is 0 because no
+  numeric limit is stated anywhere — an honest zero, not a missing probe.
+limit_count: 0
+headers:
+- name: shopify-complexity-score
+  observed_value: '460'
+  description: Query cost of the request under the legacy complexity scale.
+- name: shopify-complexity-score-v2
+  observed_value: '46'
+  description: Query cost of the request under the v2 complexity scale.
+exhaustion_status: 429
+retry_guidance: >-
+  "Respect rate limits. The MCP endpoint is rate-limited per IP. Back off on 429 responses." —
+  https://drinkpoppi.com/agents.md
+retry_after_header: not observed
+limits:
+- scope: per-ip
+  surface: https://drinkpoppi.com/api/ucp/mcp
+  window: not stated
+  limit: not stated
+  burst: not stated
+  basis: cost-based (complexity score per request)
+  source: https://drinkpoppi.com/agents.md
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://drinkpoppi.com/api/ucp/mcp
+  http_status: 200

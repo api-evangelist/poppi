@@ -1,0 +1,29 @@
+generated: '2026-08-26'
+method: derived
+source: mcp/poppi-mcp-tools.json, https://drinkpoppi.com/agents.md
+format: jsonrpc-2.0
+note: >-
+  poppi publishes no error-code reference. There is no OpenAPI, so there are no 4xx/5xx response objects to
+  derive a catalog from. What follows is the error surface that is actually documented or observable, and
+  nothing more — no invented codes, no invented types. An agent integrating here should expect JSON-RPC
+  error objects and in-band checkout errors, and should not assume a stable numeric taxonomy.
+envelope:
+  transport: JSON-RPC 2.0 error object {code, message, data?}
+  in_band: >-
+    complete_checkout returns errors inside the checkout result rather than as a transport error — its own
+    description states it returns "order ID, Thank You Page URL, or any errors encountered".
+problems:
+- status: 429
+  title: Rate limited
+  detail: >-
+    The MCP endpoint is rate-limited per IP. Agents must back off on 429.
+  source: https://drinkpoppi.com/agents.md
+  remediation: Exponential backoff; watch shopify-complexity-score-v2 to budget request cost.
+- status: 404
+  title: Not found
+  detail: Storefront returns a Shopify 404 page for unknown paths, including unserved /.well-known/* paths.
+  source: probed 2026-08-26
+gaps:
+- No published error-code registry.
+- No RFC 9457 problem+json.
+- No documented JSON-RPC error code range for UCP tool failures.
