@@ -9,6 +9,17 @@ description: >-
   remote MCP endpoint at /api/ucp/mcp exposing 13 catalog, cart, checkout and order tools with full JSON
   Schema input contracts. Poppi is not a software vendor and ships no developer program, SDKs or OpenAPI —
   its API surface is the Shopify-native agentic-commerce stack served on and scoped to its own domain.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://drinkpoppi.com/cdn/shop/files/1680_x_750_FLAVOR_FEATURE.jpg
 url: https://raw.githubusercontent.com/api-evangelist/poppi/refs/heads/main/apis.yml
 x-type: company
