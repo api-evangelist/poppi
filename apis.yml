@@ -32,6 +32,17 @@ tags:
 - Consumer Packaged Goods
 - Beverages
 - Food and Beverage
+- E-Commerce
+- Direct to Consumer
+- Retail
+- Agentic Commerce
+- Shopify
+- MCP
+tags_raw:
+- Company
+- Consumer Packaged Goods
+- Beverages
+- Food and Beverage
 - Ecommerce
 - Direct to Consumer
 - Retail
@@ -50,6 +61,12 @@ apis:
   humanURL: https://drinkpoppi.com/agents.md
   baseURL: https://drinkpoppi.com/api/ucp/mcp
   tags:
+  - Agentic Commerce
+  - MCP
+  - E-Commerce
+  - Catalog
+  - Checkout
+  tags_raw:
   - Agentic Commerce
   - MCP
   - Ecommerce
@@ -82,6 +99,11 @@ apis:
   humanURL: https://shopify.dev/docs/api/storefront
   baseURL: https://drinkpoppi.com/api/2026-07/graphql.json
   tags:
+  - GraphQL
+  - E-Commerce
+  - Catalog
+  - Cart
+  tags_raw:
   - GraphQL
   - Ecommerce
   - Catalog
