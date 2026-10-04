@@ -103,6 +103,9 @@ apis:
     url: data-model/poppi-data-model.yml
   - type: ToolCrosswalk
     url: mcp/poppi-tool-crosswalk.yml
+  x-surface: platform-generated
+  x-platform: shopify
+  x-platform-surface: ucp
 - aid: poppi:poppi-storefront-graphql
   name: Poppi Storefront GraphQL API
   description: The Shopify Storefront GraphQL API as deployed on poppi's own domain — 34 query fields,
@@ -128,6 +131,9 @@ apis:
     url: graphql/poppi-storefront.graphql
   - type: Documentation
     url: https://shopify.dev/docs/api/storefront
+  x-surface: platform-generated
+  x-platform: shopify
+  x-platform-surface: storefront-graphql
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
